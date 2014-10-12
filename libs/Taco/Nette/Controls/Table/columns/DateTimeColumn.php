@@ -15,7 +15,7 @@ use InvalidArgumentException,
 /**
  * Format column with DateTime
  */
-class DateTimeColumn extends Nette\Application\UI\Control implements KeyColumn
+class DateTimeColumn extends Nette\ComponentModel\Component implements KeyColumn
 {
 
 

@@ -22,7 +22,7 @@ use Nette;
 /**
  * Plain text column
  */
-class TextColumn extends Nette\Application\UI\Control implements KeyColumn
+class TextColumn extends Nette\ComponentModel\Component implements KeyColumn
 {
 
 
