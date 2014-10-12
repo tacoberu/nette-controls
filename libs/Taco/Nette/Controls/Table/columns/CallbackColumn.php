@@ -23,7 +23,7 @@ use Nette,
 /**
  * Plain text column
  */
-class CallbackColumn extends Nette\Application\UI\Control implements CompositeColumn
+class CallbackColumn extends Nette\ComponentModel\Component implements CompositeColumn
 {
 
 

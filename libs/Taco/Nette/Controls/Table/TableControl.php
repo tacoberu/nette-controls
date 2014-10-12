@@ -72,6 +72,7 @@ class Table extends Control
 			$type->setHeader($header);
 		}
 
+		$type->parent = $this;
 		$this->columns[$name] = $type;
 
 		return $this;
@@ -125,7 +126,7 @@ class Table extends Control
 	{
 		$this->template->values = $this->getValues();
 		$this->template->cols = $this->getCols();
-		$this->template->heads = $this->getHeaders();
+		$this->template->headers = $this->getHeaders();
 		$this->template->render();
 	}
 

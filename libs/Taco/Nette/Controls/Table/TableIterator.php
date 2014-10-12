@@ -39,6 +39,9 @@ class Iterator implements StdIterator, Countable
 	 */
 	public function __construct($values, RowDecorator $decorator)
 	{
+		if ($values instanceof StdIterator) {
+			$values = iterator_to_array($values);
+		}
 		$this->values = $values;
 		$this->decorator = $decorator;
 	}
