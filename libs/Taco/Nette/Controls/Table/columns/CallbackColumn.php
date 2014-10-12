@@ -7,36 +7,33 @@
 namespace Taco\Nette\Controls\Table;
 
 use Nette,
-	Nette\Utils;
-use InvalidArgumentException,
-	DateTime;
+	Nette\Utils\Callback;
 
 
 /**
- * Format column with DateTime
+ * Plain text column
  */
-class DateTimeColumn extends Nette\Application\UI\Control implements KeyColumn
+class CallbackColumn extends Nette\Application\UI\Control implements CompositeColumn
 {
 
 
 	/** @var string */
-	private $value;
+	private $row;
 
 
-	/** @var string */
+	/** @var string|callback */
 	private $header;
 
 
-	/** @var string */
-	private $format = 'Y-m-d H:i:s';
+	/** @var callback */
+	private $callback;
 
 
-	function __construct($format = Null)
+	function __construct($callback)
 	{
+		Callback::check($callback);
 		parent::__construct();
-		if ($format) {
-			$this->format = $format;
-		}
+		$this->callback = $callback;
 	}
 
 
@@ -61,12 +58,9 @@ class DateTimeColumn extends Nette\Application\UI\Control implements KeyColumn
 	 * Content of current column
 	 * @param string
 	 */
-	function setValue($m)
+	function setRow($m)
 	{
-		if (! $m instanceof DateTime) {
-			throw new InvalidArgumentException("Argument must be type of DateTime.");
-		}
-		$this->value = $m;
+		$this->row = $m;
 		return $this;
 	}
 
@@ -77,7 +71,8 @@ class DateTimeColumn extends Nette\Application\UI\Control implements KeyColumn
 	 */
 	function __toString()
 	{
-		return (string)$this->value->format($this->format);
+		$fce = $this->callback;
+		return (string)$fce($this->row);
 	}
 
 
