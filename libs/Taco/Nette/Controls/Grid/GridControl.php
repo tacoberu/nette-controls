@@ -123,9 +123,9 @@ class Grid extends Control
 	 */
 	protected function createComponentPaginator($name)
 	{
-		$c = new VisualPaginator($this, $name);
-		$c->paginator->itemsPerPage = $this->itemsPerPage;
-		$c->paginator->itemCount = $this->values->count();
+		$c = new Paginator($this, $name);
+		$c->itemsPerPage = $this->itemsPerPage;
+		$c->itemCount = $this->values->count();
 		return $c;
 	}
 
