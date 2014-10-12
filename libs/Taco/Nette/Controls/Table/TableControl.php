@@ -17,21 +17,14 @@ namespace Taco\Nette\Controls;
 
 use LogicException,
 	DateTime;
-use Nette\Application\UI\Control,
-	Nette\Utils\Callback;
+use Nette\Utils\Callback;
 
 
 /**
  * Simple table of items.
  */
-class Table extends Control
+class Table extends BaseControl
 {
-
-	/**
-	 * @var string Cesta k souboru se šablonou.
-	 */
-	public $templateFile = Null;
-
 
 	/**
 	 * @var array Zobrazovaná data.
@@ -133,17 +126,6 @@ class Table extends Control
 
 
 	// -- PROTECTED ----------------------------------------------------
-
-
-
-	/**
-	 * Create template
-	 * @return Template
-	 */
-	protected function createTemplate($class = NULL)
-	{
-		return parent::createTemplate()->setFile($this->templateFile ?: __DIR__ . "/table.latte");
-	}
 
 
 
