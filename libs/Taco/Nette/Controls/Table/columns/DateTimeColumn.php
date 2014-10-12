@@ -24,25 +24,29 @@ use InvalidArgumentException,
 /**
  * Format column with DateTime
  */
-class DateTimeColumn extends Nette\Application\UI\Control implements Column
+class DateTimeColumn extends Nette\Application\UI\Control implements KeyColumn
 {
 
 
 	/** @var string */
 	private $value;
 
+
 	/** @var string */
-	private $label;
+	private $header;
+
 
 	/** @var string */
 	private $format = 'Y-m-d H:i:s';
 
-	/** @var callback */
-	//~ private $renderer = null;
 
-	/** @var string */
-	//~ private $columnName;
-
+	function __construct($format = Null)
+	{
+		parent::__construct();
+		if ($format) {
+			$this->format = $format;
+		}
+	}
 
 
 	/**
@@ -51,13 +55,13 @@ class DateTimeColumn extends Nette\Application\UI\Control implements Column
 	 */
 	function getHeader()
 	{
-		return $this->label;
+		return $this->header;
 	}
 
 
 	function setHeader($m)
 	{
-		$this->label = $m;
+		$this->header = $m;
 		return $this;
 	}
 

@@ -16,22 +16,36 @@
 namespace Taco\Nette\Controls\Table;
 
 
-use Nette;
+use Nette,
+	Nette\Utils\Callback;
 
 
 /**
  * Plain text column
  */
-class PrototypeColumn implements Column
+class CallbackColumn extends Nette\Application\UI\Control implements CompositeColumn
 {
 
 
 	/** @var string */
-	private $value;
+	private $row;
 
 
-	/** @var string */
-	private $label;
+	/** @var string|callback */
+	private $header;
+
+
+	/** @var callback */
+	private $callback;
+
+
+	function __construct($callback)
+	{
+		Callback::check($callback);
+		parent::__construct();
+		$this->callback = $callback;
+	}
+
 
 	/**
 	 * Get label of column for head.
@@ -39,13 +53,13 @@ class PrototypeColumn implements Column
 	 */
 	function getHeader()
 	{
-		return $this->label;
+		return $this->header;
 	}
 
 
 	function setHeader($m)
 	{
-		$this->label = $m;
+		$this->header = $m;
 		return $this;
 	}
 
@@ -54,9 +68,9 @@ class PrototypeColumn implements Column
 	 * Content of current column
 	 * @param string
 	 */
-	function setValue($m)
+	function setRow($m)
 	{
-		$this->value = $m;
+		$this->row = $m;
 		return $this;
 	}
 
@@ -67,7 +81,8 @@ class PrototypeColumn implements Column
 	 */
 	function __toString()
 	{
-		return (string)$this->value;
+		$fce = $this->callback;
+		return (string)$fce($this->row);
 	}
 
 

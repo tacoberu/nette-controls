@@ -22,7 +22,7 @@ use Nette;
 /**
  * Plain text column
  */
-class TextColumn extends Nette\Application\UI\Control implements Column
+class TextColumn extends Nette\Application\UI\Control implements KeyColumn
 {
 
 
@@ -30,14 +30,7 @@ class TextColumn extends Nette\Application\UI\Control implements Column
 	private $value;
 
 	/** @var string */
-	private $label;
-
-	/** @var callback */
-	//~ private $renderer = null;
-
-	/** @var string */
-	//~ private $columnName;
-
+	private $header;
 
 
 	/**
@@ -46,13 +39,13 @@ class TextColumn extends Nette\Application\UI\Control implements Column
 	 */
 	function getHeader()
 	{
-		return $this->label;
+		return $this->header;
 	}
 
 
 	function setHeader($m)
 	{
-		$this->label = $m;
+		$this->header = $m;
 		return $this;
 	}
 

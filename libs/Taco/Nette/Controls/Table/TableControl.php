@@ -18,12 +18,11 @@ namespace Taco\Nette\Controls;
 use LogicException,
 	DateTime;
 use Nette\Application\UI\Control,
-	Nette\Utils\Paginator,
 	Nette\Utils\Callback;
 
 
 /**
- * Simple list of items.
+ * Simple table of items.
  */
 class Table extends Control
 {
@@ -47,21 +46,34 @@ class Table extends Control
 
 
 
+	/**
+	 * Přiřazení hodnot, které budeme zobrazovat.
+	 */
 	function setValues($values)
 	{
 		$this->values = $values;
-		if (count($this->columns)) {
-			$this->columns = $this->typeCast($this->columns, $this->getRepresetationSample($values));
-		}
 		return $this;
 	}
 
 
 
-	function setHeader($name, $label)
+
+	/**
+	 * Nastavit nějakému sloupečku styl vyplnění.
+	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
+	 */
+	function addColumn($name, $header, $type = Null)
 	{
-		//~ $this[$name]->setHeader($label);
-		$this->getColumn($name, Null)->setHeader($label);
+		if (empty($type)) {
+			$type = new Table\TextColumn();
+		}
+
+		if ($header) {
+			$type->setHeader($header);
+		}
+
+		$this->columns[$name] = $type;
+
 		return $this;
 	}
 
@@ -84,10 +96,7 @@ class Table extends Control
 	 */
 	function getHeaders()
 	{
-		//	Vzor pro pořadí sloupců.
-		$headers = $this->getRepresetationSample($this->values);
-
-		//	Definice hlaviček sloupců.
+		$headers = array();
 		foreach ($this->columns as $n => $col) {
 			$headers[$n] = $col->getHeader();
 		}
@@ -98,31 +107,8 @@ class Table extends Control
 
 
 	/**
-	 * Doplnění prototypů hlaviček. Pokud nejdříve nastavujeme hlavičky,
-	 * a až pak přiřadíme data, tak se nedají typnout, jakého typu je
-	 * sloupce v případě, kdy jej neurčíme explicitně.
+	 * Řádky s daty opatřené dekorátorem, který každé buce přiřadí její formátor.
 	 *
-	 * @param array $columns Pole definic sloupců.
-	 * @param array $sample Vzorek dat.
-	 *
-	 * @return array
-	 */
-	function typeCast(array $columns, array $sample)
-	{
-		foreach ($columns as $n => $col) {
-			if ($col instanceof Table\PrototypeColumn) {
-				$col = $this->createColumn($n, isset($sample[$n]) ? $sample[$n] : Null, $col);
-				$columns[$n] = $col;
-			}
-		}
-
-		return $columns;
-	}
-
-
-
-	/**
-	 * Řádky s daty.
 	 * @return array of array
 	 */
 	function getValues()
@@ -145,6 +131,10 @@ class Table extends Control
 
 
 
+	// -- PROTECTED ----------------------------------------------------
+
+
+
 	/**
 	 * Create template
 	 * @return Template
@@ -159,83 +149,15 @@ class Table extends Control
 	// -- PRIVATE ------------------------------------------------------
 
 
-	/**
-	 * @return Header
-	 * /
-	private function _getHeader($name)
-	{
-		return $this->getColumn($name, Null); //->getHeader();
-	}
-
-
-	/**
-	 * @return Column
-	 */
-	private function getColumn($name, $sample)
-	{
-		if (! isset($this->columns[$name])) {
-			if ($sample == Null) {
-				$this->columns[$name] = new Table\PrototypeColumn();
-			}
-			else {
-				$this->columns[$name] = $this->createColumn($name, $sample);
-			}
-		}
-		return $this->columns[$name];
-	}
-
-
-
-	/**
-	 * @return Column
-	 */
-	private function createColumn($name, $sample, Table\PrototypeColumn $col = Null)
-	{
-		if ($sample == Null) {
-			$column = new Table\TextColumn();
-		}
-		else if (is_string($sample) || is_scalar($sample)) {
-			$column = new Table\TextColumn();
-		}
-		else if ($sample instanceof DateTime) {
-			$column = new Table\DateTimeColumn();
-		}
-		else {
-			throw new LogicException('Unsuported typo of content: `' . get_class($sample) . '\'.');
-		}
-
-		// Doplnit data z prototypu
-		if ($col) {
-			$column->setHeader($col->getHeader());
-		}
-
-		return $column;
-	}
-
-
-
 
 	/**
 	 * Šablona pro wrapování řádek.
 	 */
 	private function createRowWrapping()
 	{
-		$res = array();
-		$row = $this->getRepresetationSample($this->values);
-		foreach ($row as $n => $v) {
-			$res[$n] = $this->getColumn($n, $v);
-		}
-		return new Table\RowDecorator($res);
+		return new Table\RowDecorator($this->columns);
 	}
 
 
-
-	private function getRepresetationSample($values)
-	{
-		if (! $values || ! count($values)) {
-			return array();
-		}
-		return reset($values);
-	}
 
 }

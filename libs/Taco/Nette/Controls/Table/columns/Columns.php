@@ -36,16 +36,32 @@ interface Column
 
 
 	/**
+	 * @return string
+	 */
+	function __toString();
+
+
+}
+
+
+
+interface KeyColumn extends Column
+{
+	/**
 	 * Content of current column
 	 * @param string
 	 */
 	function setValue($m);
 
+}
 
+
+interface CompositeColumn extends Column
+{
 	/**
-	 * @return string
+	 * Content of current row
+	 * @param array
 	 */
-	function __toString();
-
+	function setRow($m);
 
 }

@@ -52,8 +52,6 @@ class Iterator implements StdIterator, Countable
 	public function rewind()
 	{
 		$this->pointer = 0;
-		//~ $this->result->seek(0);
-		//~ $this->row = $this->result->fetch();
 	}
 
 
@@ -76,7 +74,6 @@ class Iterator implements StdIterator, Countable
 	public function current()
 	{
 		return $this->decorator->decore($this->values[$this->pointer]);
-		return '>>' . $this->values[$this->pointer];
 	}
 
 
@@ -87,7 +84,6 @@ class Iterator implements StdIterator, Countable
 	 */
 	public function next()
 	{
-		//~ $this->row = $this->result->fetch();
 		$this->pointer++;
 	}
 
@@ -100,7 +96,6 @@ class Iterator implements StdIterator, Countable
 	public function valid()
 	{
 		return isset($this->values[$this->pointer]);
-		//~ return !empty($this->row);
 	}
 
 

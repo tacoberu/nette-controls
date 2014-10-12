@@ -17,6 +17,7 @@ namespace Taco\Nette\Controls\Table;
 
 
 use Nette;
+use LogicException;
 
 
 /**
@@ -26,15 +27,15 @@ class RowDecorator
 {
 
 
-	private $map;
+	private $columns;
 
 
 	/**
 	 * --
 	 */
-	public function __construct(array $map)
+	public function __construct(array $columns)
 	{
-		$this->map = $map;
+		$this->columns = $columns;
 	}
 
 
@@ -45,12 +46,23 @@ class RowDecorator
 	 */
 	function decore($row)
 	{
-		foreach ($row as $n => $v) {
-			$fl = $this->map[$n];
-			$fl->setValue($v);
-			$row[$n] = $fl;
+		$res = array();
+		foreach ($this->columns as $n => $cell) {
+			if ($cell instanceof KeyColumn) {
+				if (!isset($row[$n])) {
+					throw new LogicException("Cell with name: `$n' not found in row: `" . implode(',', array_keys($row)) . "'.");
+				}
+				$cell->setValue($row[$n]);
+			}
+			elseif ($cell instanceof CompositeColumn) {
+				$cell->setRow($row);
+			}
+			else {
+				throw new LogicException("Unsupported type of column.");
+			}
+			$res[$n] = $cell;
 		}
-		return $row;
+		return $res;
 	}
 
 
