@@ -20,13 +20,12 @@ namespace Taco\Nette\Controls;
 
 
 use Nette\Utils\Paginator as UtilsPaginator;
-use Nette\Application\UI;
 
 
 /**
  * Visual paginator control.
  */
-class Paginator extends UI\Control
+class Paginator extends BaseControl
 {
 
 	/** @var Nette\Utils\Paginator */
@@ -65,8 +64,6 @@ class Paginator extends UI\Control
 	}
 
 
-
-
 	/**
 	 * @return Nette\Utils\Paginator
 	 */
@@ -96,7 +93,6 @@ class Paginator extends UI\Control
 		$this->template->steps = $this->getSteps();
 		$this->template->paginator = $this->getPaginator();
 
-		$this->template->setFile(__DIR__ . '/paginator.latte');
 		$this->template->render();
 	}
 

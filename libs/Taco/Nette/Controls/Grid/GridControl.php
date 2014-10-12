@@ -9,22 +9,15 @@ namespace Taco\Nette\Controls;
 use LogicException,
 	DateTime;
 use Taco\Utils\LazyIterator;
-use Nette\Application\UI\Control,
-	Nette\Utils\Callback;
+use Nette\Utils\Callback;
 
 /**
  * Simple table of items.
  */
-class Grid extends Control
+class Grid extends BaseControl
 {
 
 	const ITEMS_PER_PAGE = 20;
-
-
-	/**
-	 * @var string Cesta k souboru se šablonou.
-	 */
-	public $templateFile = Null;
 
 
 	/**
@@ -77,28 +70,7 @@ class Grid extends Control
 
 
 
-	/**
-	 * Default render
-	 */
-	function render()
-	{
-		$this->template->render();
-	}
-
-
-
 	// -- PROTECTED ----------------------------------------------------
-
-
-
-	/**
-	 * Create template
-	 * @return Template
-	 */
-	protected function createTemplate($class = NULL)
-	{
-		return parent::createTemplate()->setFile($this->templateFile ?: __DIR__ . "/grid.latte");
-	}
 
 
 
