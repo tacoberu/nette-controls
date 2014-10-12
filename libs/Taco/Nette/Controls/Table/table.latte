@@ -1,0 +1,21 @@
+{dump}
+
+<table border=1>
+	<thead n:if="count($heads)">
+		<tr>
+			<th n:foreach="$heads as $col">{$col}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr n:foreach="$values as $row">
+			<td n:foreach="$row as $col">{$col}</td>
+		</tr>
+	</tbody>
+
+	<tfoot>
+		<tr>
+			<th colspan="{$cols - 1}">foot</th>
+			<td>(c)</td>
+		</tr>
+	</tfoot>
+</table>
