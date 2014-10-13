@@ -62,6 +62,15 @@ class TextColumn extends Nette\ComponentModel\Component implements KeyColumn
 
 
 	/**
+	 * Content of current column
+	 */
+	function getValue()
+	{
+		return $this->value;
+	}
+
+
+	/**
 	 * Render cell
 	 * @param mixed $record record
 	 */
