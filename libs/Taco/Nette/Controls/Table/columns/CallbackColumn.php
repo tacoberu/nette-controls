@@ -69,10 +69,10 @@ class CallbackColumn extends Nette\ComponentModel\Component implements Composite
 	 * Render cell
 	 * @param mixed $record record
 	 */
-	function __toString()
+	function render()
 	{
 		$fce = $this->callback;
-		return (string)$fce($this->row);
+		echo $fce($this->row);
 	}
 
 

@@ -29,7 +29,7 @@ interface Column
 	/**
 	 * @return string
 	 */
-	function __toString();
+	function render();
 
 
 }
