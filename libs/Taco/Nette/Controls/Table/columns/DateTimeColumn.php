@@ -84,9 +84,9 @@ class DateTimeColumn extends Nette\ComponentModel\Component implements KeyColumn
 	 * Render cell
 	 * @param mixed $record record
 	 */
-	function __toString()
+	function render()
 	{
-		return (string)$this->value->format($this->format);
+		echo $this->value->format($this->format);
 	}
 
 
