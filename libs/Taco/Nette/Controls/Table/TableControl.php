@@ -40,6 +40,13 @@ class Table extends BaseControl
 
 
 	/**
+	 * @var array Akce umístěné jako poslední sloupec.
+	 */
+	private $actions = array();
+
+
+
+	/**
 	 * Přiřazení hodnot, které budeme zobrazovat.
 	 */
 	function setValues($values)
@@ -47,7 +54,6 @@ class Table extends BaseControl
 		$this->values = $values;
 		return $this;
 	}
-
 
 
 
@@ -74,12 +80,27 @@ class Table extends BaseControl
 
 
 	/**
+	 * Nastavit nějakému sloupečku styl vyplnění.
+	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
+	 */
+	function addAction(Table\Action $action)
+	{
+		$action->parent = $this;
+		$this->actions[] = $action;
+
+		return $this;
+	}
+
+
+
+	/**
 	 * Počet sloupců.
 	 * @return int
 	 */
 	function getCols()
 	{
-		return count($this->columns);
+		return count($this->columns)
+			+ count($this->actions);
 	}
 
 
@@ -112,6 +133,12 @@ class Table extends BaseControl
 
 
 
+	function hasActions()
+	{
+		return (bool)$this->actions;
+	}
+
+
 	/**
 	 * Default render
 	 */
@@ -120,6 +147,7 @@ class Table extends BaseControl
 		$this->template->values = $this->getValues();
 		$this->template->cols = $this->getCols();
 		$this->template->headers = $this->getHeaders();
+		$this->template->hasActions = $this->hasActions();
 		$this->template->render();
 	}
 

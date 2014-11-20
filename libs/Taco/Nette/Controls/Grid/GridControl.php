@@ -80,6 +80,18 @@ class Grid extends BaseControl
 
 
 
+	/**
+	 * Nastavit nějakému sloupečku styl vyplnění.
+	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
+	 */
+	function addAction($action)
+	{
+		$this['table']->addAction($action);
+		return $this;
+	}
+
+
+
 	// -- PROTECTED ----------------------------------------------------
 
 
