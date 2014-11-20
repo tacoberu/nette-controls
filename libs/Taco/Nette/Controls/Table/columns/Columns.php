@@ -36,6 +36,9 @@ interface Column
 
 
 
+/**
+ * Dostane hodnotu konkrétního klíče.
+ */
 interface KeyColumn extends Column
 {
 	/**
@@ -47,7 +50,11 @@ interface KeyColumn extends Column
 }
 
 
-interface CompositeColumn extends Column
+
+/**
+ * Dostane hodnotu celého řádku.
+ */
+interface RowColumn extends Column
 {
 	/**
 	 * Content of current row

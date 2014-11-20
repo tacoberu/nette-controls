@@ -14,6 +14,9 @@ use Nette\Utils\Callback;
 
 /**
  * Simple table of items.
+ *
+ * Tabulka obsahuje n řádek který se dělý na sloupce. Sloupec má/může mít
+ * krom vlastního obsahu také hlavičku a patičku.
  */
 class Table extends BaseControl
 {
@@ -32,6 +35,13 @@ class Table extends BaseControl
 
 
 	/**
+	 * @var array Akce umístěné jako poslední sloupec.
+	 */
+	private $actions = array();
+
+
+
+	/**
 	 * Přiřazení hodnot, které budeme zobrazovat.
 	 */
 	function setValues($values)
@@ -42,12 +52,12 @@ class Table extends BaseControl
 
 
 
-
 	/**
-	 * Nastavit nějakému sloupečku styl vyplnění.
-	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
+	 * @param string $name Jedinečné jméno sloupce.
+	 * @param string $header Titulek sloupce.
+	 * @param Table\Column $type Implementace sloupce.
 	 */
-	function addColumn($name, $header, $type = Null)
+	function addColumn($name, $header, Table\Column $type = Null)
 	{
 		if (empty($type)) {
 			$type = new Table\TextColumn();
@@ -66,12 +76,27 @@ class Table extends BaseControl
 
 
 	/**
+	 * Nastavit nějakému sloupečku styl vyplnění.
+	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
+	 */
+	function addAction(Table\Action $action)
+	{
+		$action->parent = $this;
+		$this->actions[] = $action;
+
+		return $this;
+	}
+
+
+
+	/**
 	 * Počet sloupců.
 	 * @return int
 	 */
 	function getCols()
 	{
-		return count($this->columns);
+		return count($this->columns)
+			+ count($this->actions);
 	}
 
 
@@ -104,6 +129,12 @@ class Table extends BaseControl
 
 
 
+	function hasActions()
+	{
+		return (bool)$this->actions;
+	}
+
+
 	/**
 	 * Default render
 	 */
@@ -112,6 +143,7 @@ class Table extends BaseControl
 		$this->template->values = $this->getValues();
 		$this->template->cols = $this->getCols();
 		$this->template->headers = $this->getHeaders();
+		$this->template->hasActions = $this->hasActions();
 		$this->template->render();
 	}
 
