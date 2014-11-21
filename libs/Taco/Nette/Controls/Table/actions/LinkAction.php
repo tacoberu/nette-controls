@@ -23,7 +23,7 @@ use Nette,
 /**
  * Plain text column
  */
-class CallbackColumn extends Nette\ComponentModel\Component implements RowColumn
+class LinkAction extends Nette\ComponentModel\Component implements Action
 {
 
 
@@ -47,6 +47,7 @@ class CallbackColumn extends Nette\ComponentModel\Component implements RowColumn
 	}
 
 
+
 	/**
 	 * Get label of column for head.
 	 * @return string
@@ -57,20 +58,12 @@ class CallbackColumn extends Nette\ComponentModel\Component implements RowColumn
 	}
 
 
-	/**
-	 * @return object
-	 */
-	function getRow()
-	{
-		return $this->row;
-	}
-
-
 	function setHeader($m)
 	{
 		$this->header = $m;
 		return $this;
 	}
+
 
 
 	/**

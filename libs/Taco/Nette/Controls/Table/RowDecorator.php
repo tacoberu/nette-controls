@@ -21,7 +21,7 @@ use LogicException;
 
 
 /**
- * Plain text column
+ * Decore each row.
  */
 class RowDecorator
 {
@@ -46,15 +46,16 @@ class RowDecorator
 	 */
 	function decore($row)
 	{
+		$row = (object) $row;
 		$res = array();
 		foreach ($this->columns as $n => $cell) {
 			if ($cell instanceof KeyColumn) {
-				if (!isset($row[$n])) {
-					throw new LogicException("Cell with name: `$n' not found in row: `" . implode(',', array_keys($row)) . "'.");
+				if (!isset($row->$n)) {
+					throw new LogicException("Cell with name: `$n' not found in row: `" . implode(',', array_keys((array)$row)) . "'.");
 				}
-				$cell->setValue($row[$n]);
+				$cell->setValue($row->$n);
 			}
-			elseif ($cell instanceof CompositeColumn) {
+			elseif ($cell instanceof RowColumn) {
 				$cell->setRow($row);
 			}
 			else {

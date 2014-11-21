@@ -22,6 +22,9 @@ use Nette\Utils\Callback;
 
 /**
  * Simple table of items.
+ *
+ * Tabulka obsahuje n řádek který se dělý na sloupce. Sloupec má/může mít
+ * krom vlastního obsahu také hlavičku a patičku.
  */
 class Table extends BaseControl
 {
@@ -58,10 +61,11 @@ class Table extends BaseControl
 
 
 	/**
-	 * Nastavit nějakému sloupečku styl vyplnění.
-	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
+	 * @param string $name Jedinečné jméno sloupce.
+	 * @param string $header Titulek sloupce.
+	 * @param Table\Column $type Implementace sloupce.
 	 */
-	function addColumn($name, $header, $type = Null)
+	function addColumn($name, $header, Table\Column $type = Null)
 	{
 		if (empty($type)) {
 			$type = new Table\TextColumn();
