@@ -50,7 +50,7 @@ class RowDecorator
 		$res = array();
 		foreach ($this->columns as $n => $cell) {
 			if ($cell instanceof KeyColumn) {
-				if (!isset($row->$n)) {
+				if (! property_exists($row, $n)) {
 					throw new LogicException("Cell with name: `$n' not found in row: `" . implode(',', array_keys((array)$row)) . "'.");
 				}
 				$cell->setValue($row->$n);
