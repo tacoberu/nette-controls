@@ -20,8 +20,13 @@ class TextColumn extends Nette\ComponentModel\Component implements KeyColumn
 	/** @var string */
 	private $value;
 
+
 	/** @var string */
 	private $header;
+
+
+	/** @var Formater, Callback */
+	public $formater;
 
 
 	/**
@@ -67,7 +72,13 @@ class TextColumn extends Nette\ComponentModel\Component implements KeyColumn
 	 */
 	function render()
 	{
-		echo $this->value;
+		if ($this->formater) {
+			$formater = $this->formater;
+			echo $formater($this->value);
+		}
+		else {
+			echo $this->value;
+		}
 	}
 
 

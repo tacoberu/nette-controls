@@ -17,11 +17,12 @@ namespace Taco\Nette\Controls\Table;
 
 
 use Nette,
-	Nette\Utils\Callback;
+	Nette\Utils,
+	Nette\Utils\Validators;
 
 
 /**
- * Plain text column
+ * Simple link action.
  */
 class LinkAction extends Nette\ComponentModel\Component implements Action
 {
@@ -35,15 +36,24 @@ class LinkAction extends Nette\ComponentModel\Component implements Action
 	private $header;
 
 
-	/** @var callback */
-	private $callback;
+	/** @var ? */
+	private $link;
 
 
-	function __construct($callback)
+	/** @var ? */
+	private $text;
+
+
+	/** @var Utils\Html */
+	private $cellPrototype;
+
+
+	function __construct($link, $text)
 	{
-		Callback::check($callback);
 		parent::__construct();
-		$this->callback = $callback;
+		$this->link = $link;
+		$this->text = $text;
+		$this->cellPrototype = Utils\Html::el('a');
 	}
 
 
@@ -58,6 +68,11 @@ class LinkAction extends Nette\ComponentModel\Component implements Action
 	}
 
 
+
+	/**
+	 * Set label of column for head.
+	 * @param string | NULL
+	 */
 	function setHeader($m)
 	{
 		$this->header = $m;
@@ -77,14 +92,46 @@ class LinkAction extends Nette\ComponentModel\Component implements Action
 	}
 
 
+
 	/**
 	 * Render cell
 	 * @param mixed $record record
 	 */
 	function render()
 	{
-		$fce = $this->callback;
-		echo $fce($this->row);
+		$cell = clone $this->getCellPrototype();
+		$cell->href($this->buildUrl());
+		$cell->setText($this->buildText());
+		echo $cell;
+	}
+
+
+
+	function getCellPrototype()
+	{
+		return $this->cellPrototype;
+	}
+
+
+
+	function buildUrl()
+	{
+		if (Validators::isCallable($this->link)) {
+			$fn = $this->link;
+			return $fn($this->parent->presenter, $this->row);
+		}
+		return $this->link;
+	}
+
+
+
+	function buildText()
+	{
+		if (Validators::isCallable($this->text) && ! is_string($this->text)) {
+			$fn = $this->text;
+			return $fn($this->row);
+		}
+		return $this->text;
 	}
 
 

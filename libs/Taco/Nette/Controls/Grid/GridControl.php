@@ -64,20 +64,7 @@ class Grid extends BaseControl
 	 */
 	function addColumn($name, $header, $type = Null)
 	{
-		$this['table']->addColumn($name, $header, $type);
-		return $this;
-	}
-
-
-
-	/**
-	 * Nastavit nějakému sloupečku styl vyplnění.
-	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
-	 */
-	function addAction($action)
-	{
-		$this['table']->addAction($action);
-		return $this;
+		return $this['table']->addColumn($name, $header, $type);
 	}
 
 
@@ -99,6 +86,7 @@ class Grid extends BaseControl
 		});
 		return $c;
 	}
+
 
 
 	/**

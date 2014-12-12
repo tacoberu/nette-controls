@@ -8,7 +8,7 @@ namespace Taco\Nette\Controls\Table;
 
 
 /**
- * Table column
+ * Table column type of action.
  */
 interface Action extends RowColumn
 {
