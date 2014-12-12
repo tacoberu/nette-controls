@@ -31,9 +31,10 @@ class RowDecorator
 
 
 	/**
-	 * --
+	 * Přiřazení mapy sloupců.
+	 * @param array of Columns $columns
 	 */
-	public function __construct(array $columns)
+	function __construct($columns)
 	{
 		$this->columns = $columns;
 	}
@@ -41,7 +42,7 @@ class RowDecorator
 
 
 	/**
-	 * Render cell
+	 * Decore cell by columns.
 	 * @param mixed $record record
 	 */
 	function decore($row)

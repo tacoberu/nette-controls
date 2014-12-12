@@ -43,13 +43,6 @@ class Table extends BaseControl
 
 
 	/**
-	 * @var array Akce umístěné jako poslední sloupec.
-	 */
-	private $actions = array();
-
-
-
-	/**
 	 * Přiřazení hodnot, které budeme zobrazovat.
 	 */
 	function setValues($values)
@@ -61,6 +54,8 @@ class Table extends BaseControl
 
 
 	/**
+	 * Přiřadí nějaký sloupec.
+	 *
 	 * @param string $name Jedinečné jméno sloupce.
 	 * @param string $header Titulek sloupce.
 	 * @param Table\Column $type Implementace sloupce.
@@ -75,24 +70,8 @@ class Table extends BaseControl
 			$type->setHeader($header);
 		}
 
-		$type->parent = $this;
-		$this->columns[$name] = $type;
-
-		return $this;
-	}
-
-
-
-	/**
-	 * Nastavit nějakému sloupečku styl vyplnění.
-	 * Pouze zde použité sloupečky se zobrazý. Ostatní data se ignorují.
-	 */
-	function addAction(Table\Action $action)
-	{
-		$action->parent = $this;
-		$this->actions[] = $action;
-
-		return $this;
+		$this->addComponent($type, $name);
+		return $this[$name];
 	}
 
 
@@ -103,8 +82,7 @@ class Table extends BaseControl
 	 */
 	function getCols()
 	{
-		return count($this->columns)
-			+ count($this->actions);
+		return count($this->getComponents());
 	}
 
 
@@ -116,7 +94,7 @@ class Table extends BaseControl
 	function getHeaders()
 	{
 		$headers = array();
-		foreach ($this->columns as $n => $col) {
+		foreach ($this->getComponents() as $n => $col) {
 			$headers[$n] = $col->getHeader();
 		}
 
@@ -137,12 +115,6 @@ class Table extends BaseControl
 
 
 
-	function hasActions()
-	{
-		return (bool)$this->actions;
-	}
-
-
 	/**
 	 * Default render
 	 */
@@ -151,7 +123,6 @@ class Table extends BaseControl
 		$this->template->values = $this->getValues();
 		$this->template->cols = $this->getCols();
 		$this->template->headers = $this->getHeaders();
-		$this->template->hasActions = $this->hasActions();
 		$this->template->render();
 	}
 
@@ -170,7 +141,7 @@ class Table extends BaseControl
 	 */
 	private function createRowWrapping()
 	{
-		return new Table\RowDecorator($this->columns);
+		return new Table\RowDecorator($this->getComponents());
 	}
 
 

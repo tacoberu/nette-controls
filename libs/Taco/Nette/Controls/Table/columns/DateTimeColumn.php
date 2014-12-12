@@ -37,15 +37,20 @@ class DateTimeColumn extends Nette\ComponentModel\Component implements KeyColumn
 
 
 	/** @var string */
-	private $format = 'Y-m-d H:i:s';
+	public $format = 'Y-m-d H:i:s';
 
 
-	function __construct($format = Null)
+	/** @var string */
+	public $emptyFormat = '-';
+
+
+	function __construct($format = Null, $emptyFormat = '-')
 	{
 		parent::__construct();
 		if ($format) {
 			$this->format = $format;
 		}
+		$this->emptyFormat = $emptyFormat;
 	}
 
 
@@ -72,7 +77,7 @@ class DateTimeColumn extends Nette\ComponentModel\Component implements KeyColumn
 	 */
 	function setValue($m)
 	{
-		if (! $m instanceof DateTime) {
+		if (! empty($m) && ! $m instanceof DateTime) {
 			throw new InvalidArgumentException("Argument must be type of DateTime.");
 		}
 		$this->value = $m;
@@ -86,7 +91,12 @@ class DateTimeColumn extends Nette\ComponentModel\Component implements KeyColumn
 	 */
 	function render()
 	{
-		echo $this->value->format($this->format);
+		if ($this->value) {
+			echo $this->value->format($this->format);
+		}
+		else {
+			echo $this->emptyFormat;
+		}
 	}
 
 
