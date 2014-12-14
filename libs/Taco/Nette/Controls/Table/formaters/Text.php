@@ -16,38 +16,41 @@
 namespace Taco\Nette\Controls\Table;
 
 
-use Nette,
-	Nette\Utils\Callback;
-
 
 /**
- * Plain text column
+ * Format column with value of DateTime.
  */
-class CallbackColumn extends BaseColumn implements RowColumn
+class TextFormater
 {
 
+	/** @var Formater, Callback */
+	private $formater;
 
-	/** @var callback */
-	private $callback;
 
-
-	function __construct($callback)
+	function __construct($formater = Null)
 	{
-		Callback::check($callback);
-		parent::__construct();
-		$this->callback = $callback;
+		if ($formater) {
+			$this->formater = $formater;
+		}
 	}
+
 
 
 	/**
-	 * Render cell
-	 * @param mixed $record record
+	 * Format concrete value.
+	 * @return String
 	 */
-	function render()
+	function format($value = Null)
 	{
-		$fce = $this->callback;
-		echo $fce($this->value);
+		if ($this->formater) {
+			$formater = $this->formater;
+			return $formater($value);
+		}
+		else {
+			return $value;
+		}
 	}
+
 
 
 }

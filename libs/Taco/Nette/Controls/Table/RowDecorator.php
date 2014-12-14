@@ -16,25 +16,27 @@
 namespace Taco\Nette\Controls\Table;
 
 
-use Nette;
-use LogicException;
+use LogicException,
+	Traversable;
 
 
 /**
- * Decore each row.
+ * Decore each row for assign value to cells.
  */
 class RowDecorator
 {
 
 
+	/**
+	 * @param array of Column
+	 */
 	private $columns;
 
 
 	/**
-	 * Přiřazení mapy sloupců.
 	 * @param array of Columns $columns
 	 */
-	function __construct($columns)
+	function __construct(Traversable $columns)
 	{
 		$this->columns = $columns;
 	}
@@ -57,13 +59,14 @@ class RowDecorator
 				$cell->setValue($row->$n);
 			}
 			elseif ($cell instanceof RowColumn) {
-				$cell->setRow($row);
+				$cell->setValue($row);
 			}
 			else {
-				throw new LogicException("Unsupported type of column.");
+				throw new LogicException("Unsupported type of column: `" . get_class($cell) . "'.");
 			}
 			$res[$n] = $cell;
 		}
+
 		return $res;
 	}
 

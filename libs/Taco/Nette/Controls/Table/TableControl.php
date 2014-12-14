@@ -17,7 +17,7 @@ namespace Taco\Nette\Controls;
 
 use LogicException,
 	DateTime;
-use Nette\Utils\Callback;
+use Nette\Utils\Strings;
 
 
 /**
@@ -36,10 +36,10 @@ class Table extends BaseControl
 
 
 	/**
-	 * @var array Formátování jednotlivých buněk, sloupců, patiček.
+	 * @var string
+	 * @persistent
 	 */
-	private $columns = array();
-
+	public $sort = null;
 
 
 	/**
@@ -58,19 +58,21 @@ class Table extends BaseControl
 	 *
 	 * @param string $name Jedinečné jméno sloupce.
 	 * @param string $header Titulek sloupce.
-	 * @param Table\Column $type Implementace sloupce.
+	 * @param Table\Column $column Implementace sloupce.
+	 *
+	 * @return Table\Column
 	 */
-	function addColumn($name, $header, Table\Column $type = Null)
+	function addColumn($name, $header, $column = Null)
 	{
-		if (empty($type)) {
-			$type = new Table\TextColumn();
+		if (empty($column)) {
+			$column = new Table\TextColumn();
 		}
 
 		if ($header) {
-			$type->setHeader($header);
+			$column->setHeader(new Table\Header($column, $header));
 		}
 
-		$this->addComponent($type, $name);
+		$this->addComponent($column, $name);
 		return $this[$name];
 	}
 
@@ -104,6 +106,28 @@ class Table extends BaseControl
 
 
 	/**
+	 * Definice hlaviček.
+	 * @return array
+	 */
+	function getFilters()
+	{
+		$used = False;
+		$headers = array();
+		foreach ($this->getComponents() as $n => $col) {
+			if ($filter = $col->header->filter) {
+				$used = True;
+			}
+			$headers[$n] = $filter;
+		}
+
+		if ($used) {
+			return $headers;
+		}
+	}
+
+
+
+	/**
 	 * Řádky s daty opatřené dekorátorem, který každé buce přiřadí její formátor.
 	 *
 	 * @return array of array
@@ -124,6 +148,49 @@ class Table extends BaseControl
 		$this->template->cols = $this->getCols();
 		$this->template->headers = $this->getHeaders();
 		$this->template->render();
+	}
+
+
+
+	function handleSort($column, $dir)
+	{
+		$map = $this->sort ? explode('|', $this->sort) : array();
+
+		//	vyfiltrovat právě měněný.
+		$map = array_filter($map, function($m) use ($column) {
+			return trim($m, '-') != $column;
+		});
+
+		//	nastavit mu správnou hodnotu
+		switch (strtolower($dir)) {
+			case 'asc':
+				$map[] = $column . '-';
+				break;
+			case 'desc':
+				$map[] = $column;
+				break;
+			default:
+				break;
+		}
+		$this->sort = implode('|', $map);
+		$this->redirect('this');
+	}
+
+
+
+	function getSortingStateFor($column)
+	{
+		foreach ($this->sort ? explode('|', $this->sort) : array() as $m) {
+			if ($column->name == $m) {
+				return 'desc';
+			}
+			elseif (Strings::endsWith($m, '-')) {
+				if (trim($m, '-') == $column->name) {
+					return 'asc';
+				}
+			}
+		}
+		return 'unused';
 	}
 
 

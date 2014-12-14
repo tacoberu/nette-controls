@@ -26,26 +26,19 @@ interface Model extends Countable
 	const ASC = 'asc';
 	const DESC = 'desc';
 
-	/**
-	 * Co je unikátní identifikátor záznamu.
-	 * @param (object) $item;
-	 * @return ???
-	 */
-//	function getUniqueId($item);
-
 
 	/**
 	 * @param
 	 * @return Int
 	 */
-	function count(Filter $filter = Null);
+	function count(array $filter = Null);
 
 
 	/**
 	 * @param (object) $item;
 	 * @return Iterator
 	 */
-	function getItems(Filter $filter = Null, OrderBy $order = Null, $limit = 20, $offset = 0);
+	function getItems(array $filter = Null, array $order = array(), $limit = 20, $offset = 0);
 
 
 }

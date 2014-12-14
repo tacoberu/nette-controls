@@ -23,9 +23,8 @@ use Nette,
 /**
  * Plain text column
  */
-class CallbackColumn extends BaseColumn implements RowColumn
+class CallbackFormater
 {
-
 
 	/** @var callback */
 	private $callback;
@@ -34,19 +33,19 @@ class CallbackColumn extends BaseColumn implements RowColumn
 	function __construct($callback)
 	{
 		Callback::check($callback);
-		parent::__construct();
 		$this->callback = $callback;
 	}
 
 
+
 	/**
 	 * Render cell
-	 * @param mixed $record record
+	 * @param mixed
 	 */
-	function render()
+	function format($val)
 	{
 		$fce = $this->callback;
-		echo $fce($this->value);
+		return $fce($val);
 	}
 
 

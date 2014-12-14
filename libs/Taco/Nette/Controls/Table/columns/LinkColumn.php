@@ -24,16 +24,8 @@ use Nette,
 /**
  * Simple link action.
  */
-class LinkAction extends Nette\ComponentModel\Component implements Action
+class LinkColumn extends BaseColumn implements RowColumn
 {
-
-
-	/** @var string */
-	private $row;
-
-
-	/** @var string|callback */
-	private $header;
 
 
 	/** @var ? */
@@ -54,41 +46,6 @@ class LinkAction extends Nette\ComponentModel\Component implements Action
 		$this->link = $link;
 		$this->text = $text;
 		$this->cellPrototype = Utils\Html::el('a');
-	}
-
-
-
-	/**
-	 * Get label of column for head.
-	 * @return string
-	 */
-	function getHeader()
-	{
-		return $this->header;
-	}
-
-
-
-	/**
-	 * Set label of column for head.
-	 * @param string | NULL
-	 */
-	function setHeader($m)
-	{
-		$this->header = $m;
-		return $this;
-	}
-
-
-
-	/**
-	 * Content of current column
-	 * @param string
-	 */
-	function setRow($m)
-	{
-		$this->row = $m;
-		return $this;
 	}
 
 
@@ -118,7 +75,7 @@ class LinkAction extends Nette\ComponentModel\Component implements Action
 	{
 		if (Validators::isCallable($this->link)) {
 			$fn = $this->link;
-			return $fn($this->parent->presenter, $this->row);
+			return $fn($this->parent->presenter, $this->value);
 		}
 		return $this->link;
 	}
@@ -129,7 +86,7 @@ class LinkAction extends Nette\ComponentModel\Component implements Action
 	{
 		if (Validators::isCallable($this->text) && ! is_string($this->text)) {
 			$fn = $this->text;
-			return $fn($this->row);
+			return $fn($this->value);
 		}
 		return $this->text;
 	}
