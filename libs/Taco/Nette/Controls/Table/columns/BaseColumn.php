@@ -31,6 +31,9 @@ abstract class BaseColumn extends Nette\ComponentModel\Component
 	private $formater;
 
 
+	/** @var array of String */
+	private $classes = array();
+
 
 	/**
 	 * Get label of column for head.
@@ -134,6 +137,30 @@ abstract class BaseColumn extends Nette\ComponentModel\Component
 	function getValue()
 	{
 		return $this->value;
+	}
+
+
+	/**
+	 * Content of current column
+	 * @param string
+	 */
+	function setClass($m)
+	{
+		if ($this->hasClasses($m)) {
+			return $this;
+		}
+		$this->classes[] = $m;
+		return $this;
+	}
+
+
+
+	/**
+	 * @param string
+	 */
+	function hasClasses($s)
+	{
+		return in_array($s, $this->classes);
 	}
 
 
