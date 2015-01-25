@@ -8,6 +8,9 @@
 		<tr n:foreach="$values as $row">
 			<td n:foreach="$row as $col">{control $col}</td>
 		</tr>
+		<tr n:if="! count($values)">
+			<td colspan="{$cols}">record not found</td>
+		</tr>
 	</tbody>
 
 	<tfoot>
