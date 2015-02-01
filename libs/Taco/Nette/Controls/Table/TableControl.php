@@ -191,12 +191,12 @@ class Table extends BaseControl
 	{
 		$map = $this->sort ? explode('|', $this->sort) : array();
 
-		//	vyfiltrovat právě měněný.
+		// vyfiltrovat právě měněný.
 		$map = array_filter($map, function($m) use ($column) {
 			return trim($m, '-') != $column;
 		});
 
-		//	nastavit mu správnou hodnotu
+		// nastavit mu správnou hodnotu
 		switch (strtolower($dir)) {
 			case 'asc':
 				$map[] = $column . '-';

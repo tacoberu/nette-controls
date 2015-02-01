@@ -51,17 +51,17 @@ class DetailLayoutBuilder
 	 */
 	function create($entry)
 	{
-		//	Vytáhnout klíče a hodnoty z objektu
+		// Vytáhnout klíče a hodnoty z objektu
 		if (is_object($entry)) {
 			$values = array();
-			//	Getters
+			// Getters
 			foreach (get_class_methods($entry) as $name) {
 				if (! in_array($name, array('getReflection')) && Utils\Strings::startsWith($name, 'get')) {
 					$k = strtolower(substr($name, 3));
 					$values[$k] = $entry->$name();
 				}
 			}
-			//	Public fields
+			// Public fields
 			foreach (get_object_vars($entry) as $k => $v) {
 				$values[$k] = $v;
 			}
@@ -96,7 +96,7 @@ class DetailLayoutBuilder
 			return $fn;
 		}
 
-		//	Vyhledání nepřímích předků.
+		// Vyhledání nepřímích předků.
 		foreach ($this->formaters as $name => $fn) {
 			if ($val instanceof $name) {
 				return $fn;
