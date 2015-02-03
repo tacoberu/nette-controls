@@ -18,6 +18,7 @@ namespace Taco\Nette\Controls;
 use LogicException,
 	DateTime;
 use Nette\Application\UI\Control,
+	Nette\Utils\Strings,
 	Nette\Utils\Callback;
 
 
@@ -70,6 +71,13 @@ class BaseControl extends Control
 			"$dir/templates/components/$layout.latte",
 			"$dir/templates/@$layout.latte",
 		);
+
+		if (Strings::endsWith($layout, 'control')) {
+			$layout2 = substr($layout, 0, -7);
+			$list[] = "$dir/templates/components/$layout2.latte";
+			$list[] = "$dir/templates/@$layout2.latte";
+		}
+
 		foreach ($list as $m) {
 			if (file_exists($m)) {
 				$file = $m;
@@ -79,7 +87,16 @@ class BaseControl extends Control
 
 		if (! isset($file)) {
 			$dir = dirname($this->getReflection()->getFileName());
-			$file = "$dir/$layout.latte";
+			$list = array(
+				"$dir/$layout.latte",
+				"$dir/$layout2.latte",
+			);
+			foreach ($list as $m) {
+				if (file_exists($m)) {
+					$file = $m;
+					break;
+				}
+			}
 		}
 
 		return parent::createTemplate()->setFile($file);
