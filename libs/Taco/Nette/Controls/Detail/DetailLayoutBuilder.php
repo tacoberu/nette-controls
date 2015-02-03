@@ -51,6 +51,8 @@ class DetailLayoutBuilder
 	 */
 	function create($entry)
 	{
+		$labels = array();
+
 		// Vytáhnout klíče a hodnoty z objektu
 		if (is_object($entry)) {
 			$values = array();
@@ -59,11 +61,13 @@ class DetailLayoutBuilder
 				if (! in_array($name, array('getReflection')) && Utils\Strings::startsWith($name, 'get')) {
 					$k = strtolower(substr($name, 3));
 					$values[$k] = $entry->$name();
+					$labels[$k] = self::formatLabelFromGetter($entry, $name);
 				}
 			}
 			// Public fields
 			foreach (get_object_vars($entry) as $k => $v) {
 				$values[$k] = $v;
+				$labels[$k] = self::formatLabelFromField($entry, $k);
 			}
 		}
 		else {
@@ -72,7 +76,7 @@ class DetailLayoutBuilder
 
 		$control = new DetailControl();
 		foreach ($values as $k => $val) {
-			$control->addColumn($k, self::formatLabel($k), $this->lookupFormater($val));
+			$control->addColumn($k, isset($labels[$k]) ? $labels[$k] : $k, $this->lookupFormater($val));
 		}
 
 		$control->values = $values;
@@ -115,10 +119,27 @@ class DetailLayoutBuilder
 	/**
 	 * @return string
 	 */
-	private static function formatLabel($k)
+	private static function formatLabelFromGetter($entry, $name)
 	{
-		return $k;
+		$meta = $entry->getReflection()
+			->getMethod($name)
+			->getAnnotation('meta');
+		return isset($meta['label']) ? $meta['label'] : substr($name, 3);
 	}
+
+
+
+	/**
+	 * @return string
+	 */
+	private static function formatLabelFromField($entry, $name)
+	{
+		$meta = $entry->getReflection()
+			->getProperty($name)
+			->getAnnotation('meta');
+		return isset($meta['label']) ? $meta['label'] : $name;
+	}
+
 
 
 }
