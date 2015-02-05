@@ -29,6 +29,9 @@ class RowDecorator
 	 */
 	function __construct(Traversable $columns)
 	{
+		if (! count($columns)) {
+			throw new LogicException("Count of columns is 0.");
+		}
 		$this->columns = $columns;
 	}
 
