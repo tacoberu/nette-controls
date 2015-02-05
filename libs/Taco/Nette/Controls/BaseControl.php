@@ -57,10 +57,12 @@ class BaseControl extends Control
 	 */
 	protected function createTemplate()
 	{
-		$layout = strtolower(get_class($this));
+		$layout = get_class($this);
 		if ($i = strrpos($layout, '\\')) {
 			$layout = substr($layout, $i + 1);
 		}
+		$layout = lcfirst($layout);
+		$layout1 = strtolower($layout);
 
 		$presenter = $this->presenter;
 		$name = $presenter->getName();
@@ -70,14 +72,18 @@ class BaseControl extends Control
 			$this->templateFile,
 			"$dir/templates/components/$layout.latte",
 			"$dir/templates/@$layout.latte",
+			"$dir/templates/components/$layout1.latte",
+			"$dir/templates/@$layout1.latte",
 		);
 
-		if (Strings::endsWith($layout, 'control')) {
-			$layout2 = substr($layout, 0, -7);
+		// Bez koncového control
+		if (Strings::endsWith($layout, 'Control')) {
+			$layout2 = lcfirst(substr($layout, 0, -7));
 			$list[] = "$dir/templates/components/$layout2.latte";
 			$list[] = "$dir/templates/@$layout2.latte";
 		}
 
+		// Najít
 		foreach ($list as $m) {
 			if (file_exists($m)) {
 				$file = $m;
@@ -87,13 +93,14 @@ class BaseControl extends Control
 
 		if (! isset($file)) {
 			$dir = dirname($this->getReflection()->getFileName());
-			$list = array(
-				"$dir/$layout.latte",
-				"$dir/$layout2.latte",
-			);
-			foreach ($list as $m) {
-				if (file_exists($m)) {
-					$file = $m;
+			$list = array();
+			$list[] = "$dir/$layout.latte";
+			$list[] = "$dir/$layout1.latte";
+			if (isset($layout2)) {
+				$list[] = "$dir/$layout2.latte";
+			}
+			foreach ($list as $file) {
+				if (file_exists($file)) {
 					break;
 				}
 			}
