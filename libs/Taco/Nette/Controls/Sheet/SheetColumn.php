@@ -86,14 +86,26 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 	/**
 	 * Render cell
 	 * @param mixed $record record
+	 * @return string
 	 */
-	function render()
+	function __toString()
 	{
 		if ($this->formater) {
 			$formater = clone $this->formater;
 			$formater->setOptions(func_get_args());
-			echo $formater->format($this->value);
+			return $formater->format($this->value);
 		}
+	}
+
+
+
+	/**
+	 * Render cell
+	 * @param mixed $record record
+	 */
+	function render()
+	{
+		echo $this;
 	}
 
 
