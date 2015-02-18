@@ -8,7 +8,7 @@ namespace Taco\Nette\Controls\Sheet;
 
 use Nette;
 use Taco\Utils\Formaters\Formater;
-
+use Exception;
 
 /**
  * ?
@@ -90,10 +90,16 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 	 */
 	function __toString()
 	{
-		if ($this->formater) {
-			$formater = clone $this->formater;
-			$formater->setOptions(func_get_args());
-			return $formater->format($this->value);
+		try {
+			if ($this->formater) {
+				$formater = clone $this->formater;
+				$formater->setOptions(func_get_args());
+				return (string)$formater->format($this->value);
+			}
+			return '';
+		}
+		catch (Exception $e) {
+			return "Invalid format of value with error: `{$e->getMessage()}'.";
 		}
 	}
 
@@ -105,7 +111,7 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 	 */
 	function render()
 	{
-		echo $this;
+		echo (string)$this;
 	}
 
 
