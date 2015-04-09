@@ -33,8 +33,6 @@ class TextColumnTest extends PHPUnit_Framework_TestCase
 	function testEmptyValue()
 	{
 		$entry = new TextColumn();
-		//~ dump($entry->render());
-		//~ $entry->render();
 		$state = (object) array(
 				'header' => Null,
 				'formater' => Null,

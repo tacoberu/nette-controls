@@ -19,7 +19,9 @@ use LogicException,
 	DateTime;
 use Nette\Application\UI\Control,
 	Nette\Utils\Strings,
-	Nette\Utils\Callback;
+	Nette\Utils\Callback,
+	Nette\Localization\ITranslator;
+use Taco\Localization\NetteDummyTranslator;
 
 
 /**
@@ -36,15 +38,53 @@ class BaseControl extends Control
 	public $templateFile = Null;
 
 
+	/**
+	 * @var ITranslator
+	 */
+	private $translator;
+
+
+
+	function setTranslator(ITranslator $m)
+	{
+		$this->translator = $m;
+		return $this;
+	}
+
+
+
+	/**
+	 * @return ITranslator
+	 */
+	function getTranslator()
+	{
+		if (empty($this->translator)) {
+			$this->translator = new NetteDummyTranslator();
+		}
+		return $this->translator;
+	}
+
+
 
 	/**
 	 * Default render
+	 * @output
 	 */
 	function render()
 	{
 		$this->template->render();
 	}
 
+
+
+	function getTemplate()
+	{
+		$template = parent::getTemplate();
+
+		$template->setTranslator($this->getTranslator());
+
+		return $template;
+	}
 
 
 	// -- PROTECTED ----------------------------------------------------
@@ -108,6 +148,9 @@ class BaseControl extends Control
 
 		return parent::createTemplate()->setFile($file);
 	}
+
+
+	// -- PRIVATE ------------------------------------------------------
 
 
 

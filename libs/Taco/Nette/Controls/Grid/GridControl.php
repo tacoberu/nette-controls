@@ -124,7 +124,8 @@ class Grid extends BaseControl
 
 
 	/**
-	 * Vytvoření řadících podmínek.
+	 * Získání řadících podmínek.
+	 * @return [ <column> => 'asc|desc']
 	 */
 	private function getOrder()
 	{

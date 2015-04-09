@@ -157,6 +157,7 @@ class Table extends BaseControl
 		if ($used) {
 			return $list;
 		}
+
 		return array();
 	}
 
@@ -213,28 +214,29 @@ class Table extends BaseControl
 
 
 
-	function getSortingStateFor($column)
-	{
-		foreach ($this->sort ? explode('|', $this->sort) : array() as $m) {
-			if ($column->name == $m) {
-				return 'desc';
-			}
-			elseif (Strings::endsWith($m, '-')) {
-				if (trim($m, '-') == $column->name) {
-					return 'asc';
-				}
-			}
-		}
-		return 'unused';
-	}
-
-
-
 	// -- PROTECTED ----------------------------------------------------
 
 
 
 	// -- PRIVATE ------------------------------------------------------
+
+
+
+	private function getSortingStateFor(Table\Sorted $column)
+	{
+		foreach ($this->sort ? explode('|', $this->sort) : array() as $m) {
+			if ($column->name == $m) {
+				return $column->upState;
+			}
+			elseif (Strings::endsWith($m, '-')) {
+				if (trim($m, '-') == $column->name) {
+					return $column->downState;
+				}
+			}
+		}
+
+		return $column->defaultState;
+	}
 
 
 
