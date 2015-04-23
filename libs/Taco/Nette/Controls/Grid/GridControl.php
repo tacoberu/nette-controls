@@ -88,8 +88,12 @@ class Grid extends BaseControl
 		$c = new Table($this, $name);
 		$that = $this;
 		$c->values = new LazyIterator(function() use ($that) {
+			if (empty($that->values)) {
+				return array();
+			}
 			return $that->values->getItems($this->getFilter(), $this->getOrder(), $that['paginator']->paginator->getLength(), $that['paginator']->paginator->getOffset());
 		});
+
 		return $c;
 	}
 

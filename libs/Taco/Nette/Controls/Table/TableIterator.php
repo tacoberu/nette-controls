@@ -7,6 +7,7 @@
 namespace Taco\Nette\Controls\Table;
 
 use Iterator as StdIterator,
+	Countable,
 	Traversable,
 	IteratorAggregate;
 
@@ -14,7 +15,7 @@ use Iterator as StdIterator,
 /**
  * Iterate of content. Apply decorator to each row.
  */
-class Iterator implements StdIterator
+class Iterator implements StdIterator, Countable
 {
 
 	/** @var Iterator */
@@ -37,6 +38,7 @@ class Iterator implements StdIterator
 		else {
 			$this->iterator = $values;
 		}
+
 		$this->decorator = $decorator;
 	}
 
@@ -95,5 +97,17 @@ class Iterator implements StdIterator
 		return $this->iterator->valid();
 	}
 
+
+
+	/**
+	 * @return int
+	 */
+	function count()
+	{
+		if ($this->iterator instanceof Countable) {
+			return count($this->iterator);
+		}
+		return iterator_count($this->iterator);
+	}
 
 }
