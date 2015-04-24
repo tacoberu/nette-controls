@@ -21,7 +21,7 @@ use Nette\Application\UI\Control,
 	Nette\Utils\Strings,
 	Nette\Utils\Callback,
 	Nette\Localization\ITranslator;
-use Taco\Localization\NetteDummyTranslator;
+use Taco\Nette\Localization\DummyTranslator;
 
 
 /**
@@ -59,7 +59,7 @@ class BaseControl extends Control
 	function getTranslator()
 	{
 		if (empty($this->translator)) {
-			$this->translator = new NetteDummyTranslator();
+			$this->translator = new DummyTranslator();
 		}
 		return $this->translator;
 	}
