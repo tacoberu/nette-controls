@@ -48,10 +48,15 @@ class RowDecorator
 		$res = new Row($row);
 		foreach ($this->columns as $n => $cell) {
 			if ($cell instanceof KeyColumn) {
-				if (! property_exists($row, $n)) {
-					throw new LogicException("Cell with name: `$n' not found in row: `" . implode(',', array_keys((array)$row)) . "'.");
+				if (property_exists($row, $n)) {
+					$cell->setValue($row->$n);
 				}
-				$cell->setValue($row->$n);
+				elseif (method_exists($row, "get{$n}")) {
+					$cell->setValue($row->{'get' . $n}());
+				}
+				else {
+					throw new LogicException("Cell with name: `$n' not found in row: `" . get_class($row) . "'.");
+				}
 			}
 			elseif ($cell instanceof RowColumn) {
 				$cell->setRow($row);
