@@ -1,15 +1,15 @@
-<table border=1>
+<table>
 	<thead n:if="count($headers)">
 		<tr>
-			<th n:foreach="$headers as $col">{$col}</th>
+			<th n:foreach="$headers as $col" n:attr="(expand)$col->cellAttributes">{$col}</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr n:foreach="$values as $row">
-			<td n:foreach="$row as $col">{control $col}</td>
+			<td n:foreach="$row as $col" n:attr="(expand)$col->cellAttributes">{control $col}</td>
 		</tr>
 		<tr n:if="! count($values)">
-			<td colspan="{$cols}">record not found</td>
+			<td colspan="{$cols}">Record not found.</td>
 		</tr>
 	</tbody>
 

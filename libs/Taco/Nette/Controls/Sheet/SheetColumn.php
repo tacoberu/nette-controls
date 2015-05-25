@@ -13,6 +13,9 @@ use Exception;
 /**
  * Jedna buňka výsledku. Je samovykrslitelná ale obsahuje i dodatečné informace
  * pro formátování a podobně.
+ *
+ * @property mixed $value
+ * @property Header $header
  */
 class Column extends Nette\ComponentModel\Component implements KeyColumn
 {
@@ -41,7 +44,7 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 	 */
 	function __construct($label, Formater $formater)
 	{
-		$this->header = $label;
+		$this->header = new Header($label);
 		$this->formater = $formater;
 	}
 
@@ -49,7 +52,7 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 
 	/**
 	 * Get label of column for head.
-	 * @return string
+	 * @return Header
 	 */
 	function getHeader()
 	{
@@ -58,7 +61,7 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 
 
 
-	function setHeader($m)
+	function setHeader(Header $m)
 	{
 		$this->header = $m;
 		return $this;
@@ -127,7 +130,6 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 
 	/**
 	 * Render cell
-	 * @param mixed $record record
 	 * @return string
 	 */
 	function __toString()
@@ -150,11 +152,84 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 	/**
 	 * Render cell
 	 * @param mixed $record record
+	 * @output string
 	 */
 	function render()
 	{
 		echo (string)$this;
 	}
+
+
+}
+
+
+
+class Header extends Nette\Object
+{
+	/** @var string */
+	private $label;
+
+
+	/** @var arr */
+	private $attrs = array();
+
+
+	/**
+	 * Constructor injection.
+	 * @param string $label
+	 */
+	function __construct($label)
+	{
+		$this->label = $label;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	function __toString()
+	{
+		return $this->label;
+	}
+
+
+
+	/**
+	 * Attribute of current column.
+	 *
+	 * @param array $values Example ['class'=>'text-center', 'data-type'=> 'datepicker']
+	 */
+	function setCellAttributes(array $values)
+	{
+		$this->attrs = $values;
+		return $this;
+	}
+
+
+
+	/**
+	 * Attribute of current column.
+	 *
+	 * @param string $name Example 'class', 'data-type'
+	 * @param string $value Example 'text-center', 'datepicker'
+	 */
+	function setCellAttribute($name, $value)
+	{
+		$this->attrs[$name] = $value;
+		return $this;
+	}
+
+
+
+	/**
+	 * Attribute of current column.
+	 */
+	function getCellAttributes()
+	{
+		return $this->attrs;
+	}
+
 
 
 }

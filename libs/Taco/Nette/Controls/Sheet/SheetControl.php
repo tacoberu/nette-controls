@@ -63,7 +63,7 @@ class SheetControl extends BaseControl
 		}
 		$column = new Sheet\Column($name, $formater);
 		if ($header) {
-			$column->header = $header;
+			$column->header = new Sheet\Header($header);
 		}
 		$this->addComponent($column, $name);
 		return $this[$name];
