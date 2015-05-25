@@ -11,7 +11,8 @@ use Taco\Utils\Formaters\Formater;
 use Exception;
 
 /**
- * ?
+ * Jedna buňka výsledku. Je samovykrslitelná ale obsahuje i dodatečné informace
+ * pro formátování a podobně.
  */
 class Column extends Nette\ComponentModel\Component implements KeyColumn
 {
@@ -27,6 +28,10 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 
 	/** @var Formater, Callback */
 	private $formater;
+
+
+	/** @var arr */
+	private $attrs = array();
 
 
 	/**
@@ -79,6 +84,43 @@ class Column extends Nette\ComponentModel\Component implements KeyColumn
 	function getValue()
 	{
 		return $this->value;
+	}
+
+
+
+	/**
+	 * Attribute of current column.
+	 *
+	 * @param array $values Example ['class'=>'text-center', 'data-type'=> 'datepicker']
+	 */
+	function setCellAttributes(array $values)
+	{
+		$this->attrs = $values;
+		return $this;
+	}
+
+
+
+	/**
+	 * Attribute of current column.
+	 *
+	 * @param string $name Example 'class', 'data-type'
+	 * @param string $value Example 'text-center', 'datepicker'
+	 */
+	function setCellAttribute($name, $value)
+	{
+		$this->attrs[$name] = $value;
+		return $this;
+	}
+
+
+
+	/**
+	 * Attribute of current column.
+	 */
+	function getCellAttributes()
+	{
+		return $this->attrs;
 	}
 
 
