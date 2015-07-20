@@ -29,7 +29,7 @@ interface Model extends Countable
 	 * @param (object) $item;
 	 * @return Iterator
 	 */
-	function getItems(array $filter = Null, array $order = array(), $limit = 20, $offset = 0);
+	function getItems(array $filter = array(), array $order = array(), $limit = 20, $offset = 0);
 
 
 }

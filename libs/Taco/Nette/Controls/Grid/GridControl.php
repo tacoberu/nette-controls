@@ -21,9 +21,17 @@ class Grid extends BaseControl
 
 
 	/**
-	 * @var ?
+	 * @var [ String ]
 	 */
 	private $filter = array();
+
+
+
+	/**
+	 * @var [<columnn> Enum]
+	 */
+	private $sort = array();
+
 
 
 	/**
@@ -75,6 +83,28 @@ class Grid extends BaseControl
 
 
 
+	/**
+	 * Přiřazení filtrovacích podmínek.
+	 */
+	function setFilter(array $xs = array())
+	{
+		$this->filter = $xs;
+		return $this;
+	}
+
+
+
+	/**
+	 * Přiřazení řazení mimo sloupce.
+	 */
+	function setSort($m, $dir = Grid\Model::ASC)
+	{
+		$this->sort[$m] = $dir;
+		return $this;
+	}
+
+
+
 	// -- PROTECTED ----------------------------------------------------
 
 
@@ -107,7 +137,7 @@ class Grid extends BaseControl
 	{
 		$c = new Paginator($this, $name);
 		$c->itemsPerPage = $this->itemsPerPage;
-		$c->itemCount = $this->values->count();
+		$c->itemCount = $this->values->count($this->getFilter());
 		return $c;
 	}
 
@@ -144,6 +174,11 @@ class Grid extends BaseControl
 				}
 			}
 		}
+
+		foreach ($this->sort as $n => $dir) {
+			$list[$n] = $dir;
+		}
+
 		return $list;
 	}
 
