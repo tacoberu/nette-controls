@@ -30,7 +30,21 @@ class LinkColumn extends BaseColumn implements RowColumn
 	private $cellPrototype;
 
 
-	function __construct($link, $text)
+	/**
+	 * @param string $url 'detail'
+	 * @param string $id 'id'
+	 * @return self
+	 */
+	static function plink($url, $id = 'id')
+	{
+		return new self(function($presenter, $row) use ($url, $id) {
+				return $presenter->link($url, $row->$id);
+			});
+	}
+
+
+
+	function __construct($link, $text = Null)
 	{
 		parent::__construct();
 		$this->link = $link;
@@ -78,7 +92,7 @@ class LinkColumn extends BaseColumn implements RowColumn
 			$fn = $this->text;
 			return $fn($this->value);
 		}
-		return $this->text;
+		return $this->text ? $this->text : $this->header->label;
 	}
 
 

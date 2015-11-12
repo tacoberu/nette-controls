@@ -148,9 +148,14 @@ class Table extends BaseControl
 		$used = False;
 		$list = array();
 		foreach ($this->getComponents() as $n => $col) {
+			if (empty($col->header)) {
+				continue;
+			}
+
 			if ($sorted = $col->header->sorted) {
 				$used = True;
 			}
+
 			$list[$n] = $sorted;
 		}
 

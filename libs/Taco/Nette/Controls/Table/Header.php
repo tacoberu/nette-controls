@@ -50,6 +50,13 @@ class Header extends Nette\Object
 
 
 
+	function getLabel()
+	{
+		return $this->label;
+	}
+
+
+
 	function setSorted(Sorted $m)
 	{
 		$this->sorted = $m;

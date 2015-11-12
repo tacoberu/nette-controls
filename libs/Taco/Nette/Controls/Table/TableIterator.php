@@ -51,6 +51,7 @@ class Iterator implements StdIterator, Countable
 	function rewind()
 	{
 		$this->iterator->rewind();
+		//~ reset($this->iterator);
 	}
 
 
@@ -62,6 +63,7 @@ class Iterator implements StdIterator, Countable
 	function key()
 	{
 		return $this->iterator->key();
+		//~ return key($this->iterator);
 	}
 
 
@@ -73,6 +75,7 @@ class Iterator implements StdIterator, Countable
 	function current()
 	{
 		return $this->decorator->decore($this->iterator->current());
+		//~ return $this->decorator->decore(current($this->iterator));
 	}
 
 
@@ -84,6 +87,7 @@ class Iterator implements StdIterator, Countable
 	function next()
 	{
 		$this->iterator->next();
+		//~ next($this->iterator);
 	}
 
 
@@ -95,6 +99,7 @@ class Iterator implements StdIterator, Countable
 	function valid()
 	{
 		return $this->iterator->valid();
+		//~ return (bool) current($this->iterator);
 	}
 
 
