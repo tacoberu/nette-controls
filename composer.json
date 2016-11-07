@@ -5,11 +5,12 @@
     "require": {
     	"php" : ">=5.3.0",
     	"tacoberu/php-utils": "@dev",
-    	"nette/nette": "2.*"
+    	"nette/application": "2.*"
     },
     "require-dev": {
         "php" : ">=5.3.0",
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~4.0",
+        "tracy/tracy": "^2.4"
     },
     "authors": [
         {
