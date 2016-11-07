@@ -29,6 +29,17 @@ class Row extends ArrayHash
 	}
 
 
+
+	function getRaw()
+	{
+		return $this->raw;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
 	function getRow()
 	{
 		return $this->raw;

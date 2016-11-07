@@ -7,7 +7,10 @@
 namespace Taco\Nette\Controls\Sheet;
 
 use LogicException,
-	Traversable;
+	Traversable,
+	ArrayAccess;
+use Nette\Utils\Validators;
+use Nette\Utils\AssertionException;
 
 
 /**
@@ -20,7 +23,7 @@ class RowDecorator
 	/**
 	 * @param array of Column
 	 */
-	private $columns;
+	private $columns = [];
 
 
 
@@ -32,7 +35,10 @@ class RowDecorator
 		if (! count($columns)) {
 			throw new LogicException("Count of columns is 0.");
 		}
-		$this->columns = $columns;
+		foreach ($columns as $name => $col) {
+			self::assertColumn($name, $col);
+			$this->columns[$name] = $col;
+		}
 	}
 
 
@@ -54,6 +60,9 @@ class RowDecorator
 				elseif (method_exists($row, "get{$n}")) {
 					$cell->setValue($row->{'get' . $n}());
 				}
+				elseif ($row instanceof ArrayAccess && isset($row[$n])) {
+					$cell->setValue($row[$n]);
+				}
 				else {
 					throw new LogicException("Cell with name: `$n' not found in row: `" . get_class($row) . "'.");
 				}
@@ -70,5 +79,14 @@ class RowDecorator
 		return $res;
 	}
 
+
+
+	private static function assertColumn($name, $col)
+	{
+		Validators::assert($name, 'string:1..', 'Key of list of Column');
+		if ( ! $col instanceof KeyColumn || ! $col instanceof RowColumn) {
+			new AssertionException('The type of Column expects to be KeyColumn or RowColumn.');
+		}
+	}
 
 }
