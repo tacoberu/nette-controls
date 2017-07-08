@@ -32,4 +32,33 @@ class IteratorTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals((object) ['x' => 2, 'y' => 'def'], $xs[1]->getRaw());
 	}
 
+
+
+	function testCount()
+	{
+		$deco = new RowDecorator(new ArrayObject([
+			'x' => new Column('X', new NullFormater),
+			'y' => new Column('Y', new NullFormater),
+		]));
+		$values = new ArrayObject([
+			['x' => 1, 'y' => 'abc'],
+			['x' => 2, 'y' => 'def'],
+		]);
+		$iter = new Iterator($values, $deco);
+		$this->assertEquals(2, count($iter));
+	}
+
+
+
+	function testCountEmpty()
+	{
+		$deco = new RowDecorator(new ArrayObject([
+			'x' => new Column('X', new NullFormater),
+			'y' => new Column('Y', new NullFormater),
+		]));
+		$values = new ArrayObject([]);
+		$iter = new Iterator($values, $deco);
+		$this->assertEquals(0, count($iter));
+	}
+
 }

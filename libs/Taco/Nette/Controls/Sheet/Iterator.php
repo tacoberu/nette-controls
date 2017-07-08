@@ -8,13 +8,14 @@ namespace Taco\Nette\Controls\Sheet;
 
 use Iterator as StdIterator,
 	Traversable,
+	Countable,
 	IteratorAggregate;
 
 
 /**
  * Iterate of content. Apply decorator to each row.
  */
-class Iterator implements StdIterator
+class Iterator implements StdIterator, Countable
 {
 
 	/** @var Iterator */
@@ -93,6 +94,16 @@ class Iterator implements StdIterator
 	function valid()
 	{
 		return $this->iterator->valid();
+	}
+
+
+
+	/**
+	 * @return int
+	 */
+	function count()
+	{
+		return count($this->iterator);
 	}
 
 
