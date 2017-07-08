@@ -1,0 +1,22 @@
+<table border=1>
+	<thead n:if="count($headers)">
+		<tr>
+			<th n:foreach="$headers as $col">{$col}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr n:foreach="$values as $row">
+			<td n:foreach="$row as $col">{control $col}</td>
+		</tr>
+		<tr n:if="! count($values)">
+			<td colspan="{$cols}">record not found</td>
+		</tr>
+	</tbody>
+
+	<tfoot>
+		<tr>
+			<th colspan="{$cols - 1}">foot</th>
+			<td>(c)</td>
+		</tr>
+	</tfoot>
+</table>
