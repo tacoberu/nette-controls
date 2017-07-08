@@ -7,33 +7,36 @@
 namespace Taco\Nette\Controls\Table;
 
 use Iterator as StdIterator,
-	Countable;
+	Traversable,
+	IteratorAggregate;
 
 
 /**
- * Decorate of content.
+ * Iterate of content. Apply decorator to each row.
  */
-class Iterator implements StdIterator, Countable
+class Iterator implements StdIterator
 {
-	/** @var array */
-	private $values;
 
-	/** @var ??? */
+	/** @var Iterator */
+	private $iterator;
+
+
+	/** @var RowDecorator */
 	private $decorator;
 
-	/** @var int */
-	private $pointer;
 
 
 	/**
-	 * @param  DibiResult
+	 * @param Traversable content.
 	 */
-	public function __construct($values, RowDecorator $decorator)
+	function __construct(Traversable $values, RowDecorator $decorator)
 	{
-		if ($values instanceof StdIterator) {
-			$values = iterator_to_array($values);
+		if ($values instanceof IteratorAggregate) {
+			$this->iterator = $values->getIterator();
 		}
-		$this->values = $values;
+		else {
+			$this->iterator = $values;
+		}
 		$this->decorator = $decorator;
 	}
 
@@ -43,9 +46,9 @@ class Iterator implements StdIterator, Countable
 	 * Rewinds the iterator to the first element.
 	 * @return void
 	 */
-	public function rewind()
+	function rewind()
 	{
-		$this->pointer = 0;
+		$this->iterator->rewind();
 	}
 
 
@@ -54,9 +57,9 @@ class Iterator implements StdIterator, Countable
 	 * Returns the key of the current element.
 	 * @return mixed
 	 */
-	public function key()
+	function key()
 	{
-		return $this->pointer;
+		return $this->iterator->key();
 	}
 
 
@@ -65,9 +68,9 @@ class Iterator implements StdIterator, Countable
 	 * Returns the current element.
 	 * @return mixed
 	 */
-	public function current()
+	function current()
 	{
-		return $this->decorator->decore($this->values[$this->pointer]);
+		return $this->decorator->decore($this->iterator->current());
 	}
 
 
@@ -76,9 +79,9 @@ class Iterator implements StdIterator, Countable
 	 * Moves forward to next element.
 	 * @return void
 	 */
-	public function next()
+	function next()
 	{
-		$this->pointer++;
+		$this->iterator->next();
 	}
 
 
@@ -87,20 +90,10 @@ class Iterator implements StdIterator, Countable
 	 * Checks if there is a current element after calls to rewind() or next().
 	 * @return bool
 	 */
-	public function valid()
+	function valid()
 	{
-		return isset($this->values[$this->pointer]);
+		return $this->iterator->valid();
 	}
 
-
-
-	/**
-	 * Required by the Countable interface.
-	 * @return int
-	 */
-	public function count()
-	{
-		return count($this->values);
-	}
 
 }

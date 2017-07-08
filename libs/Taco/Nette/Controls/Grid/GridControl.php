@@ -9,7 +9,7 @@ namespace Taco\Nette\Controls;
 use LogicException,
 	DateTime;
 use Taco\Utils\LazyIterator;
-use Nette\Utils\Callback;
+
 
 /**
  * Simple table of items.
@@ -18,6 +18,12 @@ class Grid extends BaseControl
 {
 
 	const ITEMS_PER_PAGE = 20;
+
+
+	/**
+	 * @var ?
+	 */
+	private $filter = array();
 
 
 	/**
@@ -50,7 +56,7 @@ class Grid extends BaseControl
 	 * @param int $itemsPerPage items per page
 	 * @return Grid
 	 */
-	public function setItemsPerPage($itemsPerPage)
+	function setItemsPerPage($itemsPerPage)
 	{
 		$this->itemsPerPage = $itemsPerPage;
 		return $this;
@@ -82,7 +88,7 @@ class Grid extends BaseControl
 		$c = new Table($this, $name);
 		$that = $this;
 		$c->values = new LazyIterator(function() use ($that) {
-			return $that->values->getItems(Null, NUll, $that['paginator']->paginator->getLength(), $that['paginator']->paginator->getOffset());
+			return $that->values->getItems($this->getFilter(), $this->getOrder(), $that['paginator']->paginator->getLength(), $that['paginator']->paginator->getOffset());
 		});
 		return $c;
 	}
@@ -104,6 +110,37 @@ class Grid extends BaseControl
 
 
 	// -- PRIVATE ------------------------------------------------------
+
+
+
+	/**
+	 * Vytvoření filtrovacích podmínek.
+	 */
+	private function getFilter()
+	{
+		return $this->filter;
+	}
+
+
+
+	/**
+	 * Vytvoření řadících podmínek.
+	 */
+	private function getOrder()
+	{
+		$list = array();
+		foreach ($this['table']->getComponents(False, 'Taco\Nette\controls\Table\BaseColumn') as $m) {
+			if ($m->getSorted()) {
+				if ($m->getSorted()->isAsc()) {
+					$list[$m->name] = Grid\Model::ASC;
+				}
+				elseif ($m->getSorted()->isDesc()) {
+					$list[$m->name] = Grid\Model::DESC;
+				}
+			}
+		}
+		return $list;
+	}
 
 
 

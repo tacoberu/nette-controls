@@ -31,7 +31,7 @@ class CallbackModel implements Model
 	 * @param
 	 * @return Int
 	 */
-	function count(Filter $filter = Null)
+	function count(array $filter = array())
 	{
 		$fce = $this->countCallback;
 		return $fce($filter);
@@ -42,7 +42,7 @@ class CallbackModel implements Model
 	 * @param (object) $item;
 	 * @return Iterator
 	 */
-	function getItems(Filter $filter = Null, OrderBy $order = Null, $limit = 20, $offset = 0)
+	function getItems(array $filter = array(), array $order = array(), $limit = 20, $offset = 0)
 	{
 		$fce = $this->getItemsCallback;
 		return $fce($filter, $order, $limit, $offset);

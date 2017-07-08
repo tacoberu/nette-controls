@@ -21,16 +21,33 @@ interface Column
 
 
 	/**
-	 * ???
+	 * Set label of column for head.
+	 * @param string
 	 */
-	function setHeader($m);
+	function setHeader(Header $m);
+
 
 
 	/**
-	 * @return string
+	 * @output string
 	 */
 	function render();
 
+
+}
+
+
+
+/**
+ * Dostane hodnotu konkrétního klíče.
+ */
+interface Orderable
+{
+	/**
+	 * Set ordereable of column
+	 * @param ??
+	 */
+	function setOrdered($m);
 
 }
 
@@ -60,6 +77,6 @@ interface RowColumn extends Column
 	 * Content of current row
 	 * @param array
 	 */
-	function setRow($m);
+	function setValue($m);
 
 }

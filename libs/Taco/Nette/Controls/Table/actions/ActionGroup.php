@@ -38,9 +38,9 @@ class ActionGroup extends Nette\ComponentModel\Container implements Action
 
 	/**
 	 * Set label of column for head.
-	 * @param string | NULL
+	 * @param Header
 	 */
-	function setHeader($m)
+	function setHeader(Header $m)
 	{
 		$this->header = $m;
 		return $this;
@@ -56,7 +56,7 @@ class ActionGroup extends Nette\ComponentModel\Container implements Action
 	 */
 	function addAction($label, $linkRenderer)
 	{
-		$cell = new LinkAction($linkRenderer, $label);
+		$cell = new LinkColumn($linkRenderer, $label);
 		return $this->addComponent($cell, strtolower($label));
 	}
 
@@ -66,7 +66,7 @@ class ActionGroup extends Nette\ComponentModel\Container implements Action
 	 * Content of current column
 	 * @param string
 	 */
-	function setRow($m)
+	function setValue($m)
 	{
 		$this->row = $m;
 		return $this;
@@ -91,7 +91,7 @@ class ActionGroup extends Nette\ComponentModel\Container implements Action
 	function render()
 	{
 		foreach ($this->getComponents() as $cell) {
-			$cell->setRow($this->row);
+			$cell->setValue($this->row);
 			$cell->render();
 			echo '&nbsp';
 		}

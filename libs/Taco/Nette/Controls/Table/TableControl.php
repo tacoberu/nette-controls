@@ -9,7 +9,7 @@ namespace Taco\Nette\Controls;
 
 use LogicException,
 	DateTime;
-use Nette\Utils\Callback;
+use Nette\Utils\Strings;
 
 
 /**
@@ -17,6 +17,12 @@ use Nette\Utils\Callback;
  *
  * Tabulka obsahuje n řádek který se dělý na sloupce. Sloupec má/může mít
  * krom vlastního obsahu také hlavičku a patičku.
+ *
+ * @property mixed $values
+ * @property array $filters
+ * @property array $sorteds
+ * @property array $headers
+ * @property int $cols
  */
 class Table extends BaseControl
 {
@@ -28,10 +34,10 @@ class Table extends BaseControl
 
 
 	/**
-	 * @var array Formátování jednotlivých buněk, sloupců, patiček.
+	 * @var string
+	 * @persistent
 	 */
-	private $columns = array();
-
+	public $sort;
 
 
 	/**
@@ -45,24 +51,39 @@ class Table extends BaseControl
 
 
 
+	function loadState(array $arr)
+	{
+		parent::loadState($arr);
+
+		foreach ($this->getSorteds() as $item) {
+			if ($item) {
+				$item->state = $this->getSortingStateFor($item);
+			}
+		}
+	}
+
+
+
 	/**
 	 * Přiřadí nějaký sloupec.
 	 *
 	 * @param string $name Jedinečné jméno sloupce.
 	 * @param string $header Titulek sloupce.
-	 * @param Table\Column $type Implementace sloupce.
+	 * @param Table\Column $column Implementace sloupce.
+	 *
+	 * @return Table\Column
 	 */
-	function addColumn($name, $header, Table\Column $type = Null)
+	function addColumn($name, $header, $column = Null)
 	{
-		if (empty($type)) {
-			$type = new Table\TextColumn();
+		if (empty($column)) {
+			$column = new Table\TextColumn();
 		}
 
 		if ($header) {
-			$type->setHeader($header);
+			$column->setHeader(new Table\Header($column, $header));
 		}
 
-		$this->addComponent($type, $name);
+		$this->addComponent($column, $name);
 		return $this[$name];
 	}
 
@@ -96,6 +117,52 @@ class Table extends BaseControl
 
 
 	/**
+	 * Definice hlaviček obsahující filtr.
+	 * @return array
+	 */
+	function getFilters()
+	{
+		$used = False;
+		$list = array();
+		foreach ($this->getComponents() as $n => $col) {
+			if ($filter = $col->header->filter) {
+				$used = True;
+			}
+			$list[$n] = $filter;
+		}
+
+		if ($used) {
+			return $list;
+		}
+		return array();
+	}
+
+
+
+	/**
+	 * Definice hlaviček, které jsou řazeny.
+	 * @return array
+	 */
+	function getSorteds()
+	{
+		$used = False;
+		$list = array();
+		foreach ($this->getComponents() as $n => $col) {
+			if ($sorted = $col->header->sorted) {
+				$used = True;
+			}
+			$list[$n] = $sorted;
+		}
+
+		if ($used) {
+			return $list;
+		}
+		return array();
+	}
+
+
+
+	/**
 	 * Řádky s daty opatřené dekorátorem, který každé buce přiřadí její formátor.
 	 *
 	 * @return array of array
@@ -116,6 +183,49 @@ class Table extends BaseControl
 		$this->template->cols = $this->getCols();
 		$this->template->headers = $this->getHeaders();
 		$this->template->render();
+	}
+
+
+
+	function handleSort($column, $dir)
+	{
+		$map = $this->sort ? explode('|', $this->sort) : array();
+
+		//	vyfiltrovat právě měněný.
+		$map = array_filter($map, function($m) use ($column) {
+			return trim($m, '-') != $column;
+		});
+
+		//	nastavit mu správnou hodnotu
+		switch (strtolower($dir)) {
+			case 'asc':
+				$map[] = $column . '-';
+				break;
+			case 'desc':
+				$map[] = $column;
+				break;
+			default:
+				break;
+		}
+		$this->sort = implode('|', $map);
+		$this->redirect('this');
+	}
+
+
+
+	function getSortingStateFor($column)
+	{
+		foreach ($this->sort ? explode('|', $this->sort) : array() as $m) {
+			if ($column->name == $m) {
+				return 'desc';
+			}
+			elseif (Strings::endsWith($m, '-')) {
+				if (trim($m, '-') == $column->name) {
+					return 'asc';
+				}
+			}
+		}
+		return 'unused';
 	}
 
 
