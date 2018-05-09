@@ -16,6 +16,7 @@ use Exception;
  *
  * @property mixed $value
  * @property Header $header
+ * @property array $cellAttributes
  */
 class Column extends Nette\ComponentModel\Component implements KeyColumn
 {

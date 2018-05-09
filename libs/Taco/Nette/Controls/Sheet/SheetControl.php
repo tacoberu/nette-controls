@@ -123,6 +123,14 @@ class SheetControl extends BaseControl
 
 
 
+
+	function isAnchored()
+	{
+		return true;
+	}
+
+
+
 	// -- PRIVATE ------------------------------------------------------
 
 

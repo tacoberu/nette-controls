@@ -37,6 +37,15 @@ class Row extends ArrayHash
 
 
 
+	function getIterator()
+	{
+		$inst = clone $this;
+		unset($inst->raw);
+		return new \RecursiveArrayIterator((array) $inst);
+	}
+
+
+
 	/**
 	 * @deprecated
 	 */
