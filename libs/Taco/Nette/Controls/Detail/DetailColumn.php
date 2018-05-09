@@ -12,6 +12,7 @@ use Taco\Utils\Formaters\Formater;
 
 /**
  * Element prvku.
+ * @property string $label
  */
 class Column extends Nette\ComponentModel\Component
 {

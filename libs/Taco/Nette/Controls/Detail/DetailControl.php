@@ -42,9 +42,15 @@ class DetailControl extends BaseControl
 	function setValues($values)
 	{
 		foreach ($values as $k => $v) {
-			$this[$k]->value = $v;
+			$this[$k]->setValue($v);
 		}
 	}
 
+
+
+	function isAnchored()
+	{
+		return true;
+	}
 
 }
